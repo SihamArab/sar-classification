@@ -19,12 +19,8 @@ mstar-sar-classification/
 ├── mstar_sar_classification.py   # Script principal (~1200 lignes)
 ├── requirements.txt
 ├── mstar_data/                   # Dataset MSTAR-10 (à fournir)
-│   ├── train/                    # 10 classes, dépression 17°
-│   └── test/                     # 10 classes, dépression 15°
-└── outputs/                      # Généré automatiquement
-    ├── models/                   # Checkpoints (.pth)
-    ├── plots/                    # Courbes d'apprentissage, matrices de confusion
-    └── results/                  # Rapports CSV et métriques
+    ├── train/                    # 10 classes, dépression 17°
+    └── test/                     # 10 classes, dépression 15°
 ```
 
 ## Configuration
