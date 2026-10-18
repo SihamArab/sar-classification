@@ -1,0 +1,37 @@
+# MSTAR SAR Image Classification - Python Dependencies
+# Compatible with Python 3.10.11
+# Last Updated: February 2026
+
+# Core Deep Learning
+torch==2.10.0
+torchvision==0.25.0
+
+# Numerical Computing
+numpy==2.2.6
+
+# Data Manipulation
+pandas==2.3.3
+
+# Visualization
+matplotlib==3.10.8
+seaborn==0.13.2
+
+# Machine Learning & Metrics
+scikit-learn==1.7.2
+
+# Utilities
+tqdm==4.67.1
+
+# Image Processing
+Pillow==12.1.0
+
+# Optional: For Jupyter notebooks
+# jupyter==1.0.0
+# ipykernel==6.29.0
+
+# Optional: For advanced visualization
+# plotly==5.18.0
+
+# Optional: For model profiling
+# torchinfo==1.8.0
+# thop==0.1.1
