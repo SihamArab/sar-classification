@@ -15,7 +15,7 @@ pip install -r requirements.txt
 ## Structure du projet
 
 ```
-mstar-sar-classification/
+sar-classification/
 ├── mstar_sar_classification.py   # Script principal 
 ├── requirements.txt
 ├── mstar_data/                   # Dataset MSTAR-10 (à fournir)
