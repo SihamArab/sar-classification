@@ -98,7 +98,7 @@ class Config:
     IMAGE_SIZE = 128  # Resize all images to 128x128
     NUM_CLASSES = 10  # MSTAR-10 has 10 vehicle classes
     
-    # Class names (in alphabetical order)
+    # Class folder names, one folder per vehicle class (see README)
     CLASS_NAMES = [
     'classe1', 'classe2', 'classe3', 'classe4', 'classe5',
     'classe6', 'classe7', 'classe8', 'classe9', 'classe10'
@@ -1230,13 +1230,13 @@ if __name__ == "__main__":
         print("\nExpected directory structure:")
         print("  mstar_data/")
         print("    train/")
-        print("      2S1/")
-        print("      BMP2/")
-        print("      ... (other classes)")
+        print("      classe1/")
+        print("      classe2/")
+        print("      ... up to classe10/")
         print("    test/")
-        print("      2S1/")
-        print("      BMP2/")
-        print("      ... (other classes)")
+        print("      classe1/")
+        print("      classe2/")
+        print("      ... up to classe10/")
         print("\nTo obtain MSTAR-10 dataset:")
         print("  1. Download from: https://www.sdms.afrl.af.mil/index.php?collection=mstar")
         print("  2. Organize images into class subdirectories")
