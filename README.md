@@ -16,7 +16,7 @@ pip install -r requirements.txt
 
 ```
 mstar-sar-classification/
-├── mstar_sar_classification.py   # Script principal (~1200 lignes)
+├── mstar_sar_classification.py   # Script principal 
 ├── requirements.txt
 ├── mstar_data/                   # Dataset MSTAR-10 (à fournir)
     ├── train/                    # 10 classes, dépression 17°
