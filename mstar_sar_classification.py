@@ -4,7 +4,7 @@ MSTAR-10 SAR Image Classification using CNNs
 
 This script implements a complete pipeline for SAR target recognition:
 1. Custom lightweight CNN (13M params)
-2. Data augmentation (standard + physics-based)
+2. Data augmentation (rotations, translations, simulated speckle noise)
 3. Pre-trained model comparison (AlexNet, VGG-16, ResNet-50, DenseNet-121)
 4. Comprehensive evaluation and visualization
 
@@ -14,7 +14,7 @@ Compatible with:
 - Torchvision 0.25.0+cpu
 - CPU-only training
 
-Author: Generated for MSTAR SAR Classification Project
+Authors: Siham Arab, Koceila Ourzik
 Date: 2026
 """
 
@@ -94,10 +94,6 @@ class Config:
     PLOTS_DIR = OUTPUT_DIR / 'plots'
     RESULTS_DIR = OUTPUT_DIR / 'results'
     
-    # Physics-based augmentation (from GitHub repo)
-    # TODO: Clone https://github.com/SenSE-Lab-OSU/mstar_data_aug and set path
-    SYNTHETIC_DATA_DIR = Path('./mstar_synthetic')  # Generated synthetic data
-    
     # ========== DATASET PARAMETERS ==========
     IMAGE_SIZE = 128  # Resize all images to 128x128
     NUM_CLASSES = 10  # MSTAR-10 has 10 vehicle classes
@@ -107,9 +103,6 @@ class Config:
     'classe1', 'classe2', 'classe3', 'classe4', 'classe5',
     'classe6', 'classe7', 'classe8', 'classe9', 'classe10'
 ]
-    
-    # Underrepresented classes (need augmentation)
-    UNDERSAMPLE_CLASSES = []
     
     # ========== TRAINING HYPERPARAMETERS ==========
     BATCH_SIZE = 32
@@ -126,7 +119,6 @@ class Config:
     
     # ========== AUGMENTATION PARAMETERS ==========
     USE_AUGMENTATION = True
-    AUGMENTATION_FACTOR = 10  # Generate 10 synthetic samples per original
     
     # Standard augmentation parameters
     ROTATION_DEGREES = 10
@@ -334,54 +326,9 @@ def create_augmentation_transforms(train: bool = True):
         return None
 
 
-def generate_synthetic_data():
-    """
-    Generate synthetic SAR images using physics-based augmentation.
-    
-    This function interfaces with the code from:
-    https://github.com/SenSE-Lab-OSU/mstar_data_aug
-    
-    NOTE: This is a STUB. You need to:
-    1. Clone the GitHub repository
-    2. Install MATLAB or use their provided Python conversion
-    3. Run their augmentation script on underrepresented classes
-    4. Save the generated images to Config.SYNTHETIC_DATA_DIR
-    
-    The script generates 196 complex SAR images per original sample.
-    We recommend generating a subset (e.g., 10 per sample) to avoid
-    overwhelming the dataset.
-    """
-    
-    print("\n" + "="*70)
-    print("PHYSICS-BASED DATA AUGMENTATION")
-    print("="*70)
-    
-    if not Config.SYNTHETIC_DATA_DIR.exists():
-        print(f"\nWARNING: Synthetic data directory not found: {Config.SYNTHETIC_DATA_DIR}")
-        print("\nTo generate physics-based synthetic data:")
-        print("1. Clone: git clone https://github.com/SenSE-Lab-OSU/mstar_data_aug")
-        print("2. Follow their README to generate augmented data")
-        print("3. Set Config.SYNTHETIC_DATA_DIR to the output directory")
-        print("4. Re-run this script")
-        print("\nContinuing without synthetic data augmentation...\n")
-        return False
-    
-    print(f"✓ Synthetic data found at: {Config.SYNTHETIC_DATA_DIR}")
-    print(f"✓ Will augment underrepresented classes: {Config.UNDERSAMPLE_CLASSES}")
-    
-    # TODO: Implement integration with synthetic data
-    # For now, assume synthetic images are organized in the same structure
-    # as the original dataset (subdirectories per class)
-    
-    return True
-
-
-def create_dataloaders(use_synthetic: bool = False) -> Tuple[DataLoader, DataLoader]:
+def create_dataloaders() -> Tuple[DataLoader, DataLoader]:
     """
     Create training and testing DataLoaders.
-    
-    Args:
-        use_synthetic: Whether to include synthetic augmented data
     
     Returns:
         train_loader, test_loader
@@ -406,20 +353,6 @@ def create_dataloaders(use_synthetic: bool = False) -> Tuple[DataLoader, DataLoa
         transform=test_transform,
         preprocess=True
     )
-    
-    # If using synthetic data, combine with training set
-    if use_synthetic and Config.SYNTHETIC_DATA_DIR.exists():
-        synthetic_dataset = MSTARDataset(
-            root_dir=Config.SYNTHETIC_DATA_DIR,
-            transform=train_transform,
-            preprocess=True,
-            class_to_idx=train_dataset.class_to_idx
-        )
-        
-        # Combine datasets
-        from torch.utils.data import ConcatDataset
-        train_dataset = ConcatDataset([train_dataset, synthetic_dataset])
-        print(f"✓ Added {len(synthetic_dataset)} synthetic samples to training set")
     
     print(f"✓ Training samples: {len(train_dataset)}")
     print(f"✓ Test samples: {len(test_dataset)}")
@@ -1154,11 +1087,8 @@ def main():
     
     # ========== STEP 1: DATA PREPARATION ==========
     
-    # Check for physics-based synthetic data
-    use_synthetic = generate_synthetic_data()
-    
     # Create dataloaders
-    train_loader, test_loader = create_dataloaders(use_synthetic=use_synthetic)
+    train_loader, test_loader = create_dataloaders()
     
     # ========== STEP 2: TRAIN CUSTOM LIGHTWEIGHT CNN ==========
     
@@ -1287,7 +1217,6 @@ if __name__ == "__main__":
     Before running, ensure:
     1. MSTAR-10 dataset is downloaded and organized in directories
     2. Paths in Config class are set correctly
-    3. (Optional) Synthetic data generated using the GitHub repo
     
     Run with: python mstar_sar_classification.py
     """
